@@ -1,0 +1,26 @@
+# Virtual environment
+yt_env/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Processed data
+data/processed/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Environment files
+.env
+
+# Logs / History
+history/
+logs/
