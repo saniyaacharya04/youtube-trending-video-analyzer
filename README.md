@@ -1,5 +1,6 @@
 
-# YouTube Trending Video Analyzer
+# YouTube Trending Video Analyzer[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 A Python-based data analysis and visualization project that fetches, processes, and analyzes trending YouTube videos. This project allows you to explore the most popular videos by views, engagement, and other metrics, with interactive visualizations using Streamlit.
 
