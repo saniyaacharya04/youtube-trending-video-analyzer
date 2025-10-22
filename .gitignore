@@ -24,3 +24,5 @@ data/processed/
 # Logs / History
 history/
 logs/
+history/
+.history/
