@@ -13,8 +13,8 @@ jobs:
         with:
           python-version: "3.10"
 
-      - run: |
-          pip install -r requirements.txt fastapi uvicorn pytest sqlalchemy httpx
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
-          python scripts/bootstrap_db.py
-          pytest
+      - name: Install dependencies
+        run: make install
+
+      - name: Run tests
+        run: make test
