@@ -1,154 +1,284 @@
+# YouTube Trending Video Analyzer
 
-# YouTube Trending Video Analyzer[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+An end-to-end, production-grade backend system that analyzes YouTube trending data and provides **real-time popularity prediction**, **explainable ML inference**, and **region-aware analytics** through a FastAPI service.
 
-
-A Python-based data analysis and visualization project that fetches, processes, and analyzes trending YouTube videos. This project allows you to explore the most popular videos by views, engagement, and other metrics, with interactive visualizations using Streamlit.
-
----
-
-## Features
-
-- Fetch trending YouTube videos dynamically using the YouTube Data API.
-- Store raw and processed data for reproducible analysis.
-- Analyze top videos by views, engagement ratio, and other metrics.
-- Generate interactive visualizations for insights into trends.
-- Fully modular and reusable Python codebase (`src/` directory) for analysis and visualization.
-- Streamlit interface for quick exploration of results.
+This project demonstrates **full ownership** across data ingestion, ML training, API design, SaaS-style authentication, CI/CD, Dockerization, and end-to-end validation.
 
 ---
 
-## Project Structure
+## Key Capabilities
+
+* Real YouTube trending data ingestion from Kaggle
+* Machine learning model trained on historical engagement signals
+* Region-aware inference (IN / US)
+* Explainable predictions using feature importance
+* FastAPI backend with API-key based access control
+* SQLite persistence for usage tracking
+* Dockerized deployment
+* CI pipeline with unit + E2E tests
+* One-command local setup using Makefile
+
+---
+
+## System Architecture
 
 ```
-
-YouTube-Trending-Video-Analyzer/
-├── data/
-│   ├── raw/          # Raw CSV data fetched from YouTube API
-│   └── processed/    # Cleaned and processed datasets
-├── notebooks/        # Jupyter notebooks for step-by-step analysis
-├── src/              # Python modules for data collection, cleaning, analysis, visualization
-├── main.py           # Streamlit app entry point
-├── setup_paths.py    # Reusable path setup module
-├── requirements.txt  # Python dependencies
-├── README.md         # Project overview and documentation
-└── .gitignore        # Files and folders to ignore in Git
-
-````
+Kaggle CSV Data
+      ↓
+Data Processing & Feature Engineering
+      ↓
+Region-specific ML Training (RandomForest)
+      ↓
+Saved Models (per region)
+      ↓
+FastAPI Service
+      ├── /predict   → Live ML inference
+      ├── /explain   → Feature importance
+      └── /health    → System check
+```
 
 ---
 
-## Installation
+## Tech Stack
 
-1. **Clone the repository:**
+**Backend**
+
+* Python 3.10
+* FastAPI
+* SQLAlchemy
+* SQLite
+
+**Machine Learning**
+
+* scikit-learn
+* pandas, numpy
+* joblib
+
+**DevOps**
+
+* Docker & Docker Compose
+* GitHub Actions (CI)
+* Makefile automation
+
+**Testing**
+
+* pytest (unit + E2E)
+* HTTPX
+
+---
+
+## Repository Structure
+
+```
+.
+├── data/                  # Raw & processed datasets (ignored in git)
+├── docker/                # Dockerfile and compose setup
+├── models/                # Trained ML models (generated locally)
+├── notebooks/             # Data exploration & analysis
+├── scripts/               # Bootstrap, dataset download, E2E validation
+├── src/yt_trending/       # Application source code
+│   ├── api/               # FastAPI routes & auth
+│   ├── core/              # Config & DB session
+│   ├── domain/            # ORM models
+│   ├── ml/                # Model training
+│   └── services/          # Business logic
+├── tests/                 # Unit and E2E tests
+├── Makefile
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Setup Instructions
+
+### 1. Environment Setup
 
 ```bash
-git clone https://github.com/saniyaacharya04/youtube-trending-video-analyzer.git
-cd youtube-trending-video-analyzer
-````
-
-2. **Create a virtual environment (recommended):**
-
-```bash
-python -m venv yt_env
-source yt_env/bin/activate   # macOS/Linux
-yt_env\Scripts\activate      # Windows
-```
-
-3. **Install dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
-
-4. **Set up environment variables:**
-
-Create a `.env` file in the root directory:
-
-```
-YOUTUBE_API_KEY=your_youtube_api_key_here
+conda create -n yt-trending python=3.10
+conda activate yt-trending
+make install
 ```
 
 ---
 
-## Usage
+### 2. Download Dataset (Kaggle)
 
-### Run Jupyter Notebooks
-
-The project includes modular notebooks for step-by-step exploration:
+Ensure `~/.kaggle/kaggle.json` is configured.
 
 ```bash
-jupyter notebook
+make download-data
 ```
 
-* `01_data_collection.ipynb` → Fetch trending videos from YouTube.
-* `02_data_cleaning.ipynb` → Clean and preprocess raw data.
-* `03_data_analysis.ipynb` → Perform analysis on trending videos.
-* `04_visualization.ipynb` → Generate visualizations and insights.
+This downloads the official **YouTube Trending Video Statistics** dataset and prepares region-specific CSVs.
 
-### Run Streamlit App
+---
+
+### 3. Train Models
 
 ```bash
-streamlit run main.py
+make train
 ```
 
-* Explore top trending videos by views and engagement ratio.
-* Interactive charts and tables for visual insights.
+Trains separate models for:
+
+* India (IN)
+* United States (US)
+
+Models are generated locally in `models/`.
 
 ---
 
-## Key Modules
-
-* **`src/data_collection.py`** → Fetches data using YouTube API.
-* **`src/data_cleaning.py`** → Prepares and cleans the dataset.
-* **`src/analysis.py`** → Provides functions for top videos, engagement metrics.
-* **`src/visualization.py`** → Plots visualizations using Matplotlib or Seaborn.
-* **`setup_paths.py`** → Handles reusable project path setup for notebooks and scripts.
-
----
-
-## Git & Version Control
-
-Make sure `.gitignore` is configured to exclude:
-
-```
-yt_env/
-__pycache__/
-data/processed/
-.ipynb_checkpoints/
-.env
-.DS_Store
-.history/
-logs/
-```
-
-This ensures only source code, notebooks, raw data (if necessary), and config files are committed.
-
----
-
-## Dependencies
-
-* Python 3.10+
-* pandas
-* numpy
-* google-api-python-client
-* python-dotenv
-* streamlit
-* matplotlib / seaborn
-
-Install all dependencies via:
+### 4. Run the API
 
 ```bash
-pip install -r requirements.txt
+make run
+```
+
+API runs at:
+
+```
+http://127.0.0.1:8000
 ```
 
 ---
 
-## Contribution
+## API Endpoints
 
-Contributions are welcome. Please fork the repository and submit pull requests for bug fixes, improvements, or new features.
+### Health Check
+
+```http
+GET /health
+```
+
+Response:
+
+```json
+{ "status": "ok" }
+```
+
+---
+
+### Predict Popularity
+
+```http
+GET /predict
+```
+
+Query Parameters:
+
+* `region` (IN | US)
+* `likes`
+* `comments`
+* `category_id`
+* `comments_disabled`
+* `ratings_disabled`
+
+Header:
+
+```
+X-API-Key: demo-key
+```
+
+Example:
+
+```bash
+curl -H "X-API-Key: demo-key" \
+"http://127.0.0.1:8000/predict?region=IN&likes=50000&comments=8000&category_id=10&comments_disabled=false&ratings_disabled=false"
+```
+
+Response:
+
+```json
+{
+  "region": "IN",
+  "popularity_probability": 0.76
+}
+```
+
+---
+
+### Explain Prediction
+
+```http
+GET /explain?region=IN
+```
+
+Response:
+
+```json
+{
+  "region": "IN",
+  "feature_importance": {
+    "likes": 0.5383,
+    "comment_count": 0.3316,
+    "category_id": 0.1246,
+    "comments_disabled": 0.0038,
+    "ratings_disabled": 0.0017
+  }
+}
+```
+
+---
+
+## Testing & Validation
+
+### Unit Tests
+
+```bash
+make test
+```
+
+---
+
+### Full End-to-End Validation
+
+```bash
+make e2e
+```
+
+This validates:
+
+* Database bootstrap
+* Org seeding (idempotent)
+* API startup
+* Health endpoint
+* ML inference
+* Explainability output
+
+---
+
+## CI Pipeline
+
+GitHub Actions automatically runs on every push and pull request:
+
+* Dependency installation
+* Database bootstrap
+* Unit tests
+* End-to-end validation
+
+CI definition:
+
+```
+.github/workflows/ci.yml
+```
+
+---
+
+## What This Project Demonstrates
+
+* Backend system design
+* Real ML inference in production APIs
+* Explainable ML outputs
+* Data-driven feature engineering
+* SaaS-style API authentication
+* Clean repository hygiene
+* CI/CD readiness
+* Dockerized deployment
 
 ---
 
 ## License
 
-This project is open source and available under the MIT License.
+MIT License
+
