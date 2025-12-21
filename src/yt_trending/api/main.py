@@ -27,3 +27,47 @@ def trending(org = Depends(get_org)):
 @app.post("/billing/upgrade")
 def billing_upgrade():
     return {"error": "Premium Feature – Placeholder"}, 402
+
+from yt_trending.services.prediction_service import (
+    predict_popularity,
+    get_feature_importance,
+)
+
+@app.get("/predict")
+def predict(
+    region: str,
+    likes: int,
+    comments: int,
+    category_id: int,
+    comments_disabled: bool,
+    ratings_disabled: bool,
+    org = Depends(get_org),
+):
+    track_usage(org.id, "/predict")
+
+    score = predict_popularity(
+        region.upper(),
+        likes,
+        comments,
+        category_id,
+        comments_disabled,
+        ratings_disabled,
+    )
+
+    return {
+        "region": region.upper(),
+        "popularity_probability": score,
+    }
+
+
+@app.get("/explain")
+def explain(
+    region: str,
+    org = Depends(get_org),
+):
+    track_usage(org.id, "/explain")
+
+    return {
+        "region": region.upper(),
+        "feature_importance": get_feature_importance(region.upper()),
+    }
