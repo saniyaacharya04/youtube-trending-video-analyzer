@@ -22,3 +22,4 @@ data/processed/*
 .DS_Store
 .history/
 yt_trending.db
+models/
