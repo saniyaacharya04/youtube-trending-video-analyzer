@@ -2,14 +2,15 @@
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 
-# Conda / env
+# Environments
 .env
 venv/
 yt_env/
 .conda/
 
-# Data artifacts
+# Data
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
