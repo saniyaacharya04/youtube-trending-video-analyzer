@@ -1,25 +1,50 @@
+# =====================
 # Python
+# =====================
 __pycache__/
 *.pyc
 *.pyo
 
-# Conda / env
+# =====================
+# Environments
+# =====================
 .env
-venv/
-yt_env/
+.venv/
+conda/
 .conda/
 
-# Data artifacts
+# =====================
+# Data
+# =====================
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
+# =====================
+# ML Artifacts
+# =====================
+models/
+*.joblib
+
+# =====================
+# Databases
+# =====================
+*.db
+*.sqlite3
+
+# =====================
 # Notebooks
+# =====================
 .ipynb_checkpoints/
 
-# OS
+# =====================
+# OS / Editors
+# =====================
 .DS_Store
 .history/
-yt_trending.db
-models/
+
+# =====================
+# Docker
+# =====================
+docker/.env
